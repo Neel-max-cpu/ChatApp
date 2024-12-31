@@ -16,7 +16,8 @@ function Login() {
       });
       const data = await response.json();
       if (response.ok) {  
-        console.log(data.token);      
+        // console.log(data.token);      
+        localStorage.setItem('token', data.token); // Save token
         console.log(data.username);
         navigate('/dashboard');
       } else {
