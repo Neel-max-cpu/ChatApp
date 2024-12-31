@@ -10,6 +10,10 @@ body{
   font-family: "Poppins";  
 }
 
+
+
+/* making the default scroll bar hidden and using the custom scroll bar */
+
 /* Scrollbar for WebKit-based browsers and Edge */
 .scrollbar::-webkit-scrollbar {
   width: 4px;
