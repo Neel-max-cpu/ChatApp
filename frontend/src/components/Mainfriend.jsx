@@ -3,6 +3,7 @@ import { SidebarContent, SidebarFooter, SidebarHeader } from './ui/sidebar'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { use } from 'react'
+import { useNavigate, Link } from 'react-router-dom';
 
 // json file
 import friendlist from "../assets/friendlist.json"
@@ -10,6 +11,10 @@ import friendlist from "../assets/friendlist.json"
 const Mainfriend = () => {
     const [friends, setFriends] = useState([]);
 
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        navigate('/profile'); 
+    };
 
     useEffect(() => {
         setFriends(friendlist);
@@ -61,10 +66,11 @@ const Mainfriend = () => {
 
                 <div className="flex items-center">
                     <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvCvhJhHOUxxRoXZGNwYomsL9ms-atp-p9eA&s"                        
-                        className="w-10 h-10 rounded-full mr-4"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvCvhJhHOUxxRoXZGNwYomsL9ms-atp-p9eA&s"
+                        className="w-10 h-10 rounded-full mr-4 hover:pointer"
+                        onClick={handleNavigate}
                     />
-                    <span className="text-gray-300 hover:cursor-pointer">Main User</span>
+                    <span onClick={handleNavigate} className="text-gray-300 hover:cursor-pointer">Main User</span>
                 </div>
 
             </SidebarFooter>

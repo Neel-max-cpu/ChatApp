@@ -2,11 +2,18 @@ import React, { useState } from 'react'
 
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { Pencil, Check, X  } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Pencil, Check, X, ArrowBigLeft } from 'lucide-react';
 
 const ProfilePage = ({ isOwnProfile, user }) => {
     const [status, setStatus] = useState(user?.status || '');
     const [isEditing, setIsEditing] = useState(false);
+
+
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        navigate('/dashboard'); 
+    };
 
     const handleStatusChange = (e) => {
         setStatus(e.target.value);
@@ -31,6 +38,14 @@ const ProfilePage = ({ isOwnProfile, user }) => {
 
     return (
         <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-20">
+            {/* Top navigation area */}
+            <div className="w-full flex items-center justify-start">
+                <Button onClick={handleNavigate} className="flex items-center justify-center p-2 bg-blue-700 hover:bg-blue-900 rounded-xl">
+                    <ArrowBigLeft className="h-12 w-12" />
+                    Back
+                </Button>
+            </div>
+
             {/* Profile Picture */}
             <div className="w-40 h-40 relative">
                 <img
@@ -95,14 +110,14 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                 <div className="p-4 bg-gray-700 rounded-xl">
                     {/* map here ---------- */}
                     <div className='flex space-x-4 items-center justify-center'>
-                        <span>user1(username)</span>     
+                        <span>user1(username)</span>
                         {/* action buttons  */}
-                        <Button                           
+                        <Button
                             className="bg-blue-700 hover:bg-blue-900 text-white rounded"
                         >
                             <Check />
                         </Button>
-                        <Button  className="bg-red-700 hover:bg-red-900 text-white rounded">
+                        <Button className="bg-red-700 hover:bg-red-900 text-white rounded">
                             <X />
                         </Button>
                     </div>

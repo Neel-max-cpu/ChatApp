@@ -11,7 +11,6 @@ import { Send, SendHorizontal } from 'lucide-react';
 const Dashboard = () => {
     return (
         <div className='flex h-screen bg-gray-950'>
-
             {/* left component */}
             <div className='h-full w-1/6'>
                 {/* left component */}
@@ -38,15 +37,18 @@ const Dashboard = () => {
                     <hr className="border-t-2 border-gray-400 my-0" />
 
                     {/* Middle part (Chat display) */}
-                    <div className="w-full flex-1 bg-gray-900 overflow-y-auto">
+                    <div className="w-full flex-1 bg-gray-900 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-700">
                         {/* Chat content */}
                         <div className="p-4 space-y-4">
-                            <div className="text-white bg-blue-500 rounded-lg p-3 w-fit self-end">
-                                Hello!
+                            {/* Incoming message */}
+                            <div className="text-white bg-blue-500 rounded-xl p-3 w-fit max-w-[70%]">
+                                Hello! Hi there!
                             </div>
-                            <div className="text-white bg-gray-600 rounded-lg p-3 w-fit self-start">
-                                Hi there!
-                            </div>
+
+                            {/* Outgoing message */}
+                            <div className="text-white bg-gray-600 rounded-xl p-3 w-fit ml-auto max-w-[70%]">
+                                I am Fine! How are you?
+                            </div>                           
                             {/* Add more messages */}
                         </div>
                     </div>
@@ -63,7 +65,7 @@ const Dashboard = () => {
                             className="flex-1 rounded-xl border-gray-500 p-2 bg-gray-700 border-none  placeholder:text-gray-400 text-gray-300"
                         />
                         <Button className="ml-4 bg-blue-700 text-white p-4 rounded-xl hover:bg-blue-900">
-                            <SendHorizontal/>
+                            <SendHorizontal />
                         </Button>
                     </div>
                 </div>
