@@ -94,7 +94,7 @@ const ProfilePage = ({ isOwnProfile, user }) => {
 
 
             {/* Add Friend Section */}
-            {isOwnProfile && (
+            {/* {isOwnProfile && (
                 <div className='flex justify-center items-center my-4 space-x-4'>
                     <Input type="text" placeholder="Search Username" className="text-gray-500 border-none rounded-xl bg-black">
                     </Input>
@@ -102,17 +102,17 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                         Send request
                     </Button>
                 </div>
-            )}
+            )} */}
 
 
             {/* accept friend req */}
-            {isOwnProfile && (
-                <div className="p-4 bg-gray-700 rounded-xl">
+            {/* {isOwnProfile && (
+                <div className="p-4 bg-gray-700 rounded-xl"> */}
                     {/* map here ---------- */}
-                    <div className='flex space-x-4 items-center justify-center'>
-                        <span>user1(username)</span>
+                    {/* <div className='flex space-x-4 items-center justify-center'>
+                        <span>user1(username)</span> */}
                         {/* action buttons  */}
-                        <Button
+                        {/* <Button
                             className="bg-blue-700 hover:bg-blue-900 text-white rounded"
                         >
                             <Check />
@@ -122,12 +122,12 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                         </Button>
                     </div>
                 </div>
-            )}
+            )} */}
 
 
 
             {/* Unfriend Section */}
-            {!isOwnProfile && (
+            {/* {!isOwnProfile && (
                 <div className="mt-6">
                     <Button
                         onClick={handleUnfriend}
@@ -136,7 +136,7 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                         Unfriend
                     </Button>
                 </div>
-            )}
+            )} */}
         </div>
     )
 }

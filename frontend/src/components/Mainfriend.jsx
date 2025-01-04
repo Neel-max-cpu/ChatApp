@@ -8,10 +8,11 @@ import { useNavigate, Link } from 'react-router-dom';
 // json file
 import friendlist from "../assets/friendlist.json"
 
-const Mainfriend = () => {
+const Mainfriend = ({onUserClick}) => {
     const [friends, setFriends] = useState([]);
 
     const navigate = useNavigate();
+    // would be user's profile ---------
     const handleNavigate = () => {
         navigate('/profile'); 
     };
@@ -24,7 +25,7 @@ const Mainfriend = () => {
         <div className='h-screen w-full bg-gray-900 flex flex-col'>
             {/*search username*/}
             <SidebarHeader className="bg-gray-800 p-4">
-                <Input type="text" placeholder="Search Friend" className="placeholder:text-gray-500 text-gray-300 border-none bg-gray-900 rounded-xl">
+                <Input type="text" placeholder="Search Users" className="placeholder:text-gray-500 text-gray-300 border-none bg-gray-900 rounded-xl">
                 </Input>
                 <Button className="bg-blue-700 hover:bg-blue-900 rounded-xl text-white">
                     Search
@@ -39,7 +40,7 @@ const Mainfriend = () => {
                     {friends.map((friend, index) => (
                         <div key={friend.id}>
                             {/* Friend Card */}
-                            <div className="flex items-center py-4">
+                            <div onClick={() => onUserClick(friend)} className="flex items-center py-4 hover:cursor-pointer hover:bg-gray-800">
                                 <img
                                     src={friend.profilePic}
                                     alt={`${friend.username}'s profile`}

@@ -6,30 +6,33 @@ const sendFriendRequest = async (req, res) => {
     const { recipientUsername } = req.body;
 
     try {
-        const sender = await User.findById(req.user.id); // Get the logged-in user
+        const sender = await User.findById(req.user.id); // Logged-in user
         const recipient = await User.findOne({ username: recipientUsername });
 
         if (!recipient) {
             return res.status(404).json({ error: "Recipient not found" });
         }
 
-        if (sender._id.equals(recipient._id)) {
+        if (sender.username === recipient.username) {
             return res.status(400).json({ error: "You cannot send a friend request to yourself" });
         }
 
+        // Check if a request already exists (in either direction)
         const existingRequest = await FriendRequest.findOne({
-            sender: sender._id,
-            recipient: recipient._id,
-            status: 'pending',
+            $or: [
+                { sender: sender.username, recipient: recipient.username, status: 'pending' },
+                { sender: recipient.username, recipient: sender.username, status: 'pending' },
+            ],
         });
 
         if (existingRequest) {
-            return res.status(400).json({ error: "Friend request already sent" });
+            return res.status(400).json({ error: "Friend request already exists" });
         }
 
+        // Create and save the friend request
         const friendRequest = new FriendRequest({
-            sender: sender._id,
-            recipient: recipient._id,
+            sender: sender.username,
+            recipient: recipient.username,
         });
 
         await friendRequest.save();
@@ -39,9 +42,11 @@ const sendFriendRequest = async (req, res) => {
     }
 };
 
+
+
 // Accept or decline a friend request
-const   respondToFriendRequest = async (req, res) => {
-    const { requestId, status } = req.body; // status can be 'accepted' or 'declined'
+const respondToFriendRequest = async (req, res) => {
+    const { requestId, status } = req.body; // 'accepted' or 'declined'
 
     try {
         const friendRequest = await FriendRequest.findById(requestId);
@@ -50,23 +55,21 @@ const   respondToFriendRequest = async (req, res) => {
             return res.status(404).json({ error: "Friend request not found" });
         }
 
-        const recipient = await User.findById(req.user.id); // The logged-in user
-        const sender = await User.findById(friendRequest.sender); // The user who sent the request
+        const recipient = await User.findById(req.user.id);
 
-        // Ensure the logged-in user is the recipient of the friend request
-        if (!friendRequest.recipient.equals(recipient._id)) {
+        if (!friendRequest.recipient.equals(recipient.username)) {
             return res.status(403).json({ error: "You are not authorized to respond to this request" });
         }
 
-        // Ensure the status is either 'accepted' or 'declined'
         if (status !== 'accepted' && status !== 'declined') {
             return res.status(400).json({ error: "Invalid status" });
         }
 
+        // Update friends list if accepted
         if (status === 'accepted') {
-            recipient.friends.push(sender._id);
-            sender.friends.push(recipient._id);
-
+            const sender = await User.findOne({ username: friendRequest.sender });
+            recipient.friends.push(sender.username);
+            sender.friends.push(recipient.username);
             await recipient.save();
             await sender.save();
         }
@@ -82,26 +85,37 @@ const   respondToFriendRequest = async (req, res) => {
 };
 
 
+
 // Get all friend requests for a user
 const getFriendRequests = async (req, res) => {
-    const { username } = req.params;
-
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findById(req.user.id);
+
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const friendRequests = await FriendRequest.find({
-            recipient: user._id,
+        // Get incoming requests (where the user is the recipient)
+        const incomingRequests = await FriendRequest.find({
+            recipient: user.username,
             status: 'pending',
         }).populate('sender', 'username name');
 
-        res.status(200).json(friendRequests);
+        // Get outgoing requests (where the user is the sender)
+        const outgoingRequests = await FriendRequest.find({
+            sender: user.username,
+            status: 'pending',
+        }).populate('recipient', 'username name');
+
+        res.status(200).json({
+            incoming: incomingRequests,
+            outgoing: outgoingRequests,
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 module.exports = {
     sendFriendRequest,
