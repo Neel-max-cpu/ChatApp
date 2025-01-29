@@ -3,6 +3,7 @@ const {
     sendFriendRequest,
     respondToFriendRequest,
     getFriendRequests,
+    getAllFriends,
 } = require('../controllers/friendController');
 const authenticateUser = require('../middleware/authMiddleware');
 
@@ -15,6 +16,9 @@ router.post('/send', authenticateUser, sendFriendRequest);
 router.put('/respond', authenticateUser, respondToFriendRequest);
 
 // Get all friend requests for a user
-router.get('/:username', authenticateUser, getFriendRequests);
+router.get('/checkreq', authenticateUser, getFriendRequests);
+
+// Get friends of the logged-in user
+router.get('/allfriends', authenticateUser, getAllFriends);
 
 module.exports = router;
