@@ -7,12 +7,14 @@ import { Button } from './ui/button'
 import { io } from 'socket.io-client';
 
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 
 // button
 import { Send, SendHorizontal } from 'lucide-react';
 
 // text img
 import text_img from "../assets/text.png"
+import img from "../assets/defaultPic.jpg"
 
 const Dashboard = () => {
     
@@ -48,6 +50,19 @@ const Dashboard = () => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
 
+    // fetching Chat History
+    useEffect(() => {
+        if (selectedUser) {
+            const fetchMessages = async () => {
+                const response = await axios.get(`/api/messages/${selectedUser._id}`);
+                setMessages(response.data); // Set the messages to state
+            };
+    
+            fetchMessages();
+        }
+    }, [selectedUser]);  // Fetch messages when the selected user changes
+    
+
     // Listen for incoming messages
     useEffect(() => {
         socket.on('receive_message', (message) => {
@@ -59,13 +74,14 @@ const Dashboard = () => {
         };
     }, []);
 
-    // Send a message to the recipient
+    // handle sending message
     const sendMessage = () => {
         if (message.trim() === '') return; // Prevent sending empty messages
 
         const data = {
             recipient: selectedUser.username,
             message: message,
+            senderId: localStorage.getItem('userId') // Get user ID from localStorage or state
         };
 
         socket.emit('send_message', data); // Send the message to the server
@@ -74,6 +90,8 @@ const Dashboard = () => {
 
         setMessage(''); // Clear the input
     };
+
+    
 
     return (
         <div className='flex h-screen bg-gray-950'>
@@ -96,10 +114,11 @@ const Dashboard = () => {
                             <img
                                 onClick={handleNavigate}
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNbkECXtEG_6-RV7CSNgNoYUGZE-JCliYm9g&s"
+                                // src={selectedUser.profilePic || img}
                                 alt="Profile"
                                 className="w-10 h-10 mr-4 border-2 border-gray-50 rounded-full hover:cursor-pointer"
                             />
-                            <span onClick={handleNavigate} className="text-white font-medium text-lg hover:cursor-pointer">Person's Name</span>
+                            <span onClick={handleNavigate} className="text-white font-medium text-lg hover:cursor-pointer">{selectedUser.name}</span>
                         </div>
                         {/* line */}
                         <hr className="border-t-2 border-gray-400 my-0" />
@@ -109,15 +128,21 @@ const Dashboard = () => {
                             {/* Chat content */}
                             <div className="p-4 space-y-4">
                                 {/* Incoming message */}
-                                <div className="text-white bg-blue-500 rounded-xl p-3 w-fit max-w-[70%]">
+                                {/* <div className="text-white bg-blue-500 rounded-xl p-3 w-fit max-w-[70%]">
                                     Hello! Hi there!
-                                </div>
+                                </div> */}
 
                                 {/* Outgoing message */}
-                                <div className="text-white bg-gray-600 rounded-xl p-3 w-fit ml-auto max-w-[70%]">
+                                {/* <div className="text-white bg-gray-600 rounded-xl p-3 w-fit ml-auto max-w-[70%]">
                                     I am Fine! How are you?
-                                </div>
+                                </div> */}
                                 {/* Add more messages */}
+
+                                {Array.isArray(messages) && messages.map((msg, index) => (
+                                    <div key={index} className={msg.sender === 'me' ? "text-white bg-gray-600 rounded-xl p-3 w-fit ml-auto max-w-[70%]" : "text-white bg-blue-500 rounded-xl p-3 w-fit max-w-[70%]"}>
+                                        {msg.message}
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
@@ -131,8 +156,9 @@ const Dashboard = () => {
                                 type="text"
                                 placeholder="Type your message..."
                                 className="flex-1 rounded-xl border-gray-500 p-2 bg-gray-700 border-none  placeholder:text-gray-400 text-gray-300"
+                                onChange={(e)=> setMessage(e.target.value)}
                             />
-                            <Button className="ml-4 bg-blue-700 text-white p-4 rounded-xl hover:bg-blue-900">
+                            <Button onClick={sendMessage} className="ml-4 bg-blue-700 text-white p-4 rounded-xl hover:bg-blue-900">
                                 <SendHorizontal />
                             </Button>
                         </div>
