@@ -53,11 +53,15 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                     alt="Profile"
                     className="w-full h-full rounded-full border-4 border-gray-700 object-cover"
                 />
-                {isOwnProfile && (
+                {/* {isOwnProfile && (
                     <Button className="absolute bottom-2 right-2 bg-blue-700 hover:bg-blue-900 text-white p-2 rounded-full text-sm">
                         <Pencil />
                     </Button>
-                )}
+                )} */}
+                
+                <Button className="absolute bottom-2 right-2 bg-blue-700 hover:bg-blue-900 text-white p-2 rounded-full text-sm">
+                    <Pencil />
+                </Button>                
             </div>
 
             {/* Status Section */}
@@ -67,7 +71,30 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                     <h2 className="text-lg  items-center justify-center flex">Username</h2>
                 </div>
                 <h2 className="text-lg my-3 font-bold items-center justify-center flex">✨Status✨</h2>
-                {isOwnProfile && isEditing ? (
+                {/* {isOwnProfile && isEditing ? (
+                    <div>
+                        <textarea
+                            value={status}
+                            onChange={handleStatusChange}
+                            maxLength={50}
+                            className="w-full bg-gray-800 border border-white p-2 rounded mt-2 text-white"
+                        ></textarea>
+                        <Button
+                            onClick={handleSaveStatus}
+                            className="mt-2 bg-blue-500 p-2 rounded text-white"
+                        >
+                            <Pencil />
+                        </Button>
+                    </div>
+                ) : (
+                    <p
+                        className={`mt-2 flex justify-center items-center ${isOwnProfile ? 'hover:cursor-pointer' : ''}`}
+                        onClick={() => isOwnProfile && setIsEditing(true)}
+                    >
+                        {status || 'No status set.'}
+                    </p>
+                )} */}
+                {isEditing ? (
                     <div>
                         <textarea
                             value={status}
@@ -90,11 +117,12 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                         {status || 'No status set.'}
                     </p>
                 )}
+                
             </div>
 
 
             {/* Add Friend Section */}
-            {isOwnProfile && (
+            {/* {isOwnProfile && ( */}
                 <div className='flex justify-center items-center my-4 space-x-4'>
                     <Input type="text" placeholder="Search Username" className="text-gray-500 border-none rounded-xl bg-black">
                     </Input>
@@ -102,11 +130,11 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                         Send request
                     </Button>
                 </div>
-            )}
+            {/* )} */}
 
 
             {/* accept friend req */}
-            {isOwnProfile && (
+            {/* {isOwnProfile && ( */}
                 <div className="p-4 bg-gray-700 rounded-xl">
                     {/* map here ---------- */}
                     <div className='flex space-x-4 items-center justify-center'>
@@ -122,7 +150,7 @@ const ProfilePage = ({ isOwnProfile, user }) => {
                         </Button>
                     </div>
                 </div>
-            )}
+            {/* )} */}
 
 
 
